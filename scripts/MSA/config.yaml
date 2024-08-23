@@ -1,0 +1,118 @@
+##############################################
+# Example config for msa_pipeline Snakefile  #
+##############################################
+
+########################
+# REQUIRED PARAMETERS  #
+########################
+
+# Reference species name
+# The name should match the name of a fasta file in "msa_pipeline/data" but NOT contain the .fa suffix
+refName: A_thaliana
+
+# Query species to be aligned to reference
+# The species names should each match a fasta file in "msa_pipeline/data" but NOT contain the .fa suffix
+species:
+
+- N_officinale
+- P_fendleri
+- B_divaricarpa
+- S_parvula
+- B_stricta
+- C_flexuosa
+- B_vulgaris
+- D_incana
+- C_bursa
+- L_didymum
+- R_raphanistrum
+- C_chenopodiifolia
+- C_excelsa
+- R_sativus
+- C_occulta
+- A_acutangulus
+- A_alpina
+- A_montbretiana
+- A_suecica
+- B_carinata
+- B_juncea
+- B_napus
+- B_nigra
+- B_oleracea
+- B_rapa
+- C_annum
+- C_hispida
+- C_laxa
+- C_neglecta
+- C_sativa
+- E_cheiranthoides
+- I_tinctoria
+- L_barbarum
+- N_attenuata
+- P_cornutum
+- P_tangutica
+- S_lycopersicoides
+- S_lycopersicum_heinz_5
+- S_melongena
+- S_tuberosum_solyntus
+- T_arvense
+- E_peplus
+- C_melo
+- D_carota
+- R_vialii
+- S_pennellii
+- S_galapagense
+- S_dulcamara
+- O_sativa
+- G_herbaceum
+- K_senegalensis
+- S_macrophylla
+- M_koenigii
+- A_arenosa
+- T_grandiflorum
+- C_sinensis
+- A_lyrata
+- L_chinensis
+- M_paniculata
+- C_limon
+
+######################################
+# OPTIONAL PARAMETERS  FOR ALIGNMENT #
+######################################
+
+# Split input fasta files into N chunks for improved parallel processing
+# Chunks are aligned in parallel if sufficient threads are available
+# Setting N to be greater than the minimum chromosome/scaffold number may lead to errors
+splitFastaN: 1
+
+# Set alignment tool: last|minimap2|gsalign
+aligner: last
+
+# Change default alignment parameters
+lastParams: "-m 10 -j 3 -u 1 -p HOXD70"
+minimap2Params: "-a -cx asm20"
+gsalignParams: "-sen -no_vcf"
+
+# Without last-split, the alignments are many-many after lastal, and many-one afer
+# chaining and netting.  
+lastSplit:
+# For one-to-one last alignments, comment the above and uncomment the lastSplit line below
+#lastSplit: " | last-split | maf-swap | last-split | maf-swap "
+
+# Roast multiple alignment parameters
+roastParams: "+ X=2 E="
+
+# Newick format species tree for roast
+# It must contain the reference and all other species in the alignment
+# If left empty, tree will be calculated from genome sequences with mashtree 
+speciesTree: "((sp_1,(sp_2,sp_3)),((sp_4,sp_5),(sp_6,sp_7)));"
+
+#################################################
+# OPTIONAL PARAMETERS FOR CONSERVATION ANALYSIS #
+#################################################
+
+# When callling conservation set the max number of sites to use to calculate the neutral model
+# Higher numbers may slow down the analysis without providing a better model
+maxNeutralSites: 10000000
+
+# A GFF file with CDS features must be provided in the /data dir to use a neutral model based on 4-fold degenerate sites
+refGFF: A_thaliana_shitty_chrs.gff

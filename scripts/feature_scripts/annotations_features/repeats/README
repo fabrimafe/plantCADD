@@ -1,0 +1,9 @@
+main contains all information to use.
+
+wget solomics.agis.org.cn/tomato/ftp/repeat/SL5.0.fa.mod.out.gz 
+wget solomics.agis.org.cn/tomato/ftp/repeat/SL5.0.repeat.gff3.gz 
+
+Then main_test.sh
+
+example
+bash main_test.sh
